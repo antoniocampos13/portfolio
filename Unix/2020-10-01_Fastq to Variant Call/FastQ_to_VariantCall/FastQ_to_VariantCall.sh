@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # GPL License and Copyright Notice #######################################################
 # Copyright (C)  2019  Kevin Blighe: Original implementation
 # Copyright (C)  2020  Antonio Victor Campos Coelho: Modified version.
@@ -25,26 +24,28 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ########################################################################################
 
-
 #########################################################
 #Pre-liminary step:  Safeguarding the script's operation#
 #########################################################
+# Change environment name if needed
+eval "$(conda shell.bash hook)"
+conda activate fastqvc
 
 echo "Checking command line parameters..."
 
-Read1="/mnt/c/Users/victo/Documents/ubuntu/ClinicalGradeDNAseq/reads/${1}_1.fastq.gz"
-Read2="/mnt/c/Users/victo/Documents/ubuntu/ClinicalGradeDNAseq/reads/${1}_2.fastq.gz"
-Ref_FASTA="/mnt/c/Users/victo/Documents/ubuntu/ClinicalGradeDNAseq/refs/${2}"
+Read1="${1}_1.fastq.gz"
+Read2="${1}_2.fastq.gz"
+Ref_FASTA="${2}"
 RunNumber="${3}"
 PatientID="${4}"
-BEDorGFFfile="/mnt/c/Users/victo/Documents/ubuntu/ClinicalGradeDNAseq/refs/${5}"
+BEDorGFFfile="${5}"
 TrimmingQualityReadEnds="${6}"
 TrimmingReadLengthMin="${7}"
 TrimmingAdaptor="${8}"
 FilterReadDepthCutoff="${9}"
 FilterMappingQualityCutOff="${10}"
 CallingStringency="${11}"
-Results_root="/mnt/c/Users/victo/Documents/ubuntu/ClinicalGradeDNAseq/${12}"
+Results_root="${12}"
 User="${13}"
 
 #Check that 13 parameters have been passed
@@ -142,13 +143,9 @@ mkdir -p "${Results_root}"/"${RunNumber}"/"${PatientID}"/tmp
 
 echo "Log file is "${Results_root}"/"${RunNumber}"/"${PatientID}"/"${4}"_Master.log"
 
-eval "$(conda shell.bash hook)"
-conda activate fastqvc
 
-# echo -e "\n\n\n"
-# echo "###########################################################################"
-# echo "#Pre-liminary step:  Log initialisation#"
-# echo "###########################################################################"
+
+echo "Log initialisation..."
 
 #Begin log file
 echo "Beginning analysis script on `date`, run by "${User}" with the following parameters:" \
@@ -188,9 +185,9 @@ exec &> "${Results_root}"/"${RunNumber}"/"${PatientID}"/"${4}"_Master.log
 
 echo -e "\n\n"
 echo "#####################################################"
-echo "#Analysis step 1:  adaptor and read quality trimming#"
+echo "#Step 1:  adaptor and read quality trimming         #"
 echo "#####################################################"
-echo "Beginning analysis step 1 (adaptor and read quality trimming) on `date`" \
+echo "Beginning Step 1 (adaptor and read quality trimming) on `date`" \
 	>> "${Results_root}"/"${RunNumber}"/"${PatientID}"/"${PatientID}"_PipelineLog.txt
 
 trim_galore \
@@ -211,17 +208,14 @@ TrimmingHtml1="${TrimmedPath}""${1}"_1_val_1_fastqc.html
 TrimmingHtml2="${TrimmedPath}""${1}"_2_val_2_fastqc.html
 
 echo "Done."
-
-
-
 echo -e "\n\n"
 echo "#############################"
-echo "#Analysis step 2:  Alignment#"
+echo "#Step 2:  Alignment         #"
 echo "#############################"
-echo "Beginning analysis step 2 (alignment) on `date`" \
+echo "Beginning Step 2 (alignment) on `date`" \
 	>> "${Results_root}"/"${RunNumber}"/"${PatientID}"/"${PatientID}"_PipelineLog.txt
 
-#BWA mem
+#Producing aligned SAM files with BWA mem
 bwa mem \
 	"${Ref_FASTA}" \
 	"${TrimmedFile1}" \
@@ -230,13 +224,11 @@ bwa mem \
 
 echo "Done."
 
-
-
 echo -e "\n\n"
 echo "###############################################"
-echo "#Analysis step 3:  Marking PCR duplicate reads#"
+echo "#Step 3:  Marking PCR duplicate reads         #"
 echo "###############################################"
-echo "Beginning analysis step 3 (marking and removing PCR duplicates) on `date`" \
+echo "Beginning Step 3 (marking and removing PCR duplicates) on `date`" \
 	>> "${Results_root}"/"${RunNumber}"/"${PatientID}"/"${PatientID}"_PipelineLog.txt
 
 samtools view -bS \
@@ -268,13 +260,11 @@ samtools index \
 
 echo "Done."
 
-
-
 echo -e "\n\n"
 echo "####################################################"
-echo "#Analysis step 4:  Remove low mapping quality reads#"
+echo "#Step 4:  Remove low mapping quality reads         #"
 echo "####################################################"
-echo "Beginning analysis step 4 (remove low mapping quality reads) on `date`" \
+echo "Beginning Step 4 (remove low mapping quality reads) on `date`" \
 	>> "${Results_root}"/"${RunNumber}"/"${PatientID}"/"${PatientID}"_PipelineLog.txt
 
 samtools view \
@@ -286,14 +276,11 @@ samtools index \
 	"${Results_root}"/"${RunNumber}"/"${PatientID}"/tmp/"${PatientID}"_Aligned_Sorted_PCRDuped_FiltMAPQ.bam
 
 echo "Done."
-
-
-
 echo -e "\n\n"
 echo "######################"
-echo "#Analysis step 5:  QC#"
+echo "#Step 5:  QC         #"
 echo "######################"
-echo "Beginning analysis step 5 (QC) on `date`" \
+echo "Beginning Step 5 (QC) on `date`" \
 	>> "${Results_root}"/"${RunNumber}"/"${PatientID}"/"${PatientID}"_PipelineLog.txt
 
 samtools flagstat \
@@ -345,13 +332,11 @@ echo -e "Percent reference genome covered:\t""${percent}" \
 
 echo "Done."
 
-
-
 echo -e "\n\n"
 echo "#######################################################"
-echo "#Analysis step 6:  Downsampling / random read sampling#"
+echo "#Step 6:  Downsampling / random read sampling         #"
 echo "#######################################################"
-echo "Beginning analysis step 6 (downsampling / random read sampling) on `date`" \
+echo "Beginning Step 6 (downsampling / random read sampling) on `date`" \
 	>> "${Results_root}"/"${RunNumber}"/"${PatientID}"/"${PatientID}"_PipelineLog.txt
 
 picard DownsampleSam \
@@ -386,13 +371,11 @@ samtools index \
 
 echo "Done."
 
-
-
 echo -e "\n\n"
 echo "###################################"
-echo "#Analysis step 7:  Variant calling#"
+echo "#Step 7:  Variant calling         #"
 echo "###################################"
-echo "Beginning analysis step 7 (variant calling) on `date`" \
+echo "Beginning Step 7 (variant calling) on `date`" \
 	>> "${Results_root}"/"${RunNumber}"/"${PatientID}"/"${PatientID}"_PipelineLog.txt
 
 if [ $CallingStringency == "relaxed" ]
@@ -507,13 +490,11 @@ bcftools sort -Ov \
 
 echo "Done."
 
-
-
 echo -e "\n\n"
 echo "##############################"
-echo "#Analysis step 8:  Annotation#"
+echo "#Step 8:  Annotation         #"
 echo "##############################"
-echo "Beginning analysis step 8 (annotation) on `date`" \
+echo "Beginning Step 8 (annotation) on `date`" \
 	>> "${Results_root}"/"${RunNumber}"/"${PatientID}"/"${PatientID}"_PipelineLog.txt
 
 vep \
@@ -549,15 +530,13 @@ vep \
 	--af_esp \
 	--af_gnomad
 
-
 echo -e "\n\n\n"
 echo "############################################################"
-echo "#Post-analysis step:  Moving files from temporary directory#"
+echo "#Moving files from temporary directory                     #"
 echo "############################################################"
-echo "Beginning post-analysis tidy-up on `date`" \
+echo "Beginning tidy-up on `date`" \
 	>> "${Results_root}"/"${RunNumber}"/"${PatientID}"/"${PatientID}"_PipelineLog.txt
 
-#Copy analysis files
 mv "${Results_root}"/"${RunNumber}"/"${PatientID}"/tmp/"${PatientID}"_Aligned_Sorted_PCRDuped_FiltMAPQ.bam \
 	"${Results_root}"/"${RunNumber}"/"${PatientID}"
 mv "${Results_root}"/"${RunNumber}"/"${PatientID}"/tmp/"${PatientID}"_Aligned_Sorted_PCRDuped_FiltMAPQ.bam.bai \
@@ -593,7 +572,7 @@ rm -R "${Results_root}"/"${RunNumber}"/"${PatientID}"/tmp/
 
 echo "Done."
 
-echo "Analysis script finished on `date`" \
+echo "Script finished on `date`" \
 	>> "${Results_root}"/"${RunNumber}"/"${PatientID}"/"${PatientID}"_PipelineLog.txt
 
 exit 0

@@ -22,10 +22,11 @@ This pipeline proceeds in an 8-step process:
 ## Requirements
 
 * (mini)conda environment with necessary programs
-	+ Create fastqvc environment with miniconda_requirements.yml
-	+ You may change the environment name in the yml file if desired
+  * Create fastqvc environment with miniconda_requirements.yml
+  * You may change the environment name in the yml file if desired
+
 * (Optional, but recommended) Local RefSeq cache of Ensembl Variant Effect Predictor (VEP) installed via conda environment:
-	+ vep_install -a cf -s homo_sapiens_refseq -y GRCh38 -c . –CONVERT
+  * vep_install -a cf -s homo_sapiens_refseq -y GRCh38 -c . –CONVERT
 
 * Paired-end gz-compressed FASTQ files
 * Chromosome-ordered and position-sorted BED or GFF file in hg38
@@ -50,7 +51,7 @@ Run the script, which will check command-line parameters, execute the main pipel
 
 ### Hard-coded sections of code
 
-* FastQ_to_VariantCall.sh, line 120: fastqvc miniconda environment. Change as needed.
+* FastQ_to_VariantCall.sh, line 32: fastqvc miniconda environment. Change as needed.
 
 ## Output
 
@@ -85,15 +86,23 @@ Results files are output locally to [results root]/[run number]/[sample ID]/
 
 ### Author of the present (modified) version
 
-* Antonio Victor Campos Coelho (Contact: https://antoniocampos13.github.io/pages/contact.html#contact)
+* Antonio Victor Campos Coelho ([Contact me](https://antoniocampos13.github.io/pages/contact.html#contact))
 
 # Reference
 References
-Andrews S, FastQC, https://www.bioinformatics.babraham.ac.uk/projects/fastqc/, last accessed 28th August 2017.
-Broad Institute of MIT and Harvard, Picard, http://broadinstitute.github.io/picard/, last accessed 28th August 2017
-Krueger F, Trim Galore!, https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/, last accessed 28th August 2017.
+
+[Babraham Bioinformatics - FastQC A Quality Control tool for High Throughput Sequence Data](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+
+[Picard Tools - By Broad Institute](http://broadinstitute.github.io/picard/)
+
+[Babraham Bioinformatics - Trim Galore!](https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/)
+
 Li H and Durbin R (2009), Fast and accurate short read alignment with Burrows-Wheeler transform, Bioinformatics 25(14): 1754–1760.
+
 Li H, Handsaker B, Wysoker A, Fennell T, Ruan J, Homer N, Marth G, Abecasis G, Durbin R; 1000 Genome Project Data Processing Subgroup (2009), The Sequence Alignment/Map format and SAMtools, Bioinformatics 25(16): 2078-9.
+
 Martin M (2011), Cutadapt removes adapter sequences from high-throughput sequencing reads, EMBnet.journal 17(1): 10-12.
+
 McLaren W, Gil L, Hunt S, Riat H, Ritchie G, Thormann A, Flicek P, Cunningham F (2016), The Ensembl Variant Effect Predictor, Genome Biology 17: 122.
+
 Quinlan AR & Hall IM (2010), BEDTools: a flexible suite of utilities for comparing genomic features, Bioinformatics 26(6): 841-2.
