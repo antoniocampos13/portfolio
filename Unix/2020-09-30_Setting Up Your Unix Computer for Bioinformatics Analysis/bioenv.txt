@@ -33,3 +33,4 @@ ucsc-bedgraphtobigwig
 cd-hit
 biopython==1.76
 pysam
+ensembl-vep

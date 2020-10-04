@@ -47,7 +47,7 @@ cat bioenv.txt | xargs conda install -y
 # Backing up and restoring your environment configuration
 ## Note that if you already have a `bioenv.yml` in your directory, it will be overwritten, so be careful.
 ## This file is also on the repository already.
-conda env export > bioenv.yml
+conda env export | grep -v "prefix" > bioenv.yml
 
 ## To restore this environment in your computer, or on other computer, first install miniconda again, and then:
 conda env create -f bioenv.yml
