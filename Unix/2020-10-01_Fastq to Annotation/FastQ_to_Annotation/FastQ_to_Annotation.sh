@@ -142,27 +142,21 @@ echo -e "\t2\t"${Read2}"" \
 	>> "${1}"_Pipeline_Log.txt
 echo -e "\t3\t"${Ref_FASTA}"" \
 	>> "${1}"_Pipeline_Log.txt
-echo -e "\t4\t"${RunNumber}"" \
+echo -e "\t4\t"${BEDorGFFfile}"" \
 	>> "${1}"_Pipeline_Log.txt
-echo -e "\t5\t"${PatientID}"" \
+echo -e "\t5\t"${TrimmingQualityReadEnds}"" \
 	>> "${1}"_Pipeline_Log.txt
-echo -e "\t6\t"${BEDorGFFfile}"" \
+echo -e "\t6\t"${TrimmingReadLengthMin}"" \
 	>> "${1}"_Pipeline_Log.txt
-echo -e "\t7\t"${TrimmingQualityReadEnds}"" \
+echo -e "\t7\t"${TrimmingAdaptor}"" \
 	>> "${1}"_Pipeline_Log.txt
-echo -e "\t8\t"${TrimmingReadLengthMin}"" \
+echo -e "\t8\t"${FilterReadDepthCutoff}"" \
 	>> "${1}"_Pipeline_Log.txt
-echo -e "\t9\t"${TrimmingAdaptor}"" \
+echo -e "\t9\t"${FilterMappingQualityCutOff}"" \
 	>> "${1}"_Pipeline_Log.txt
-echo -e "\t10\t"${FilterReadDepthCutoff}"" \
+echo -e "\t10\t"${CallingStringency}"" \
 	>> "${1}"_Pipeline_Log.txt
-echo -e "\t11\t"${FilterMappingQualityCutOff}"" \
-	>> "${1}"_Pipeline_Log.txt
-echo -e "\t12\t"${CallingStringency}"" \
-	>> "${1}"_Pipeline_Log.txt
-echo -e "\t13\t"${Results_root}"" \
-	>> "${1}"_Pipeline_Log.txt
-echo -e "\t14\t"${User}"" \
+echo -e "\t11\t"${User}"" \
 	>> "${1}"_Pipeline_Log.txt
 
 exec &> "${1}"_Master_Log.txt
