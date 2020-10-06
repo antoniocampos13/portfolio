@@ -33,4 +33,6 @@ ucsc-bedgraphtobigwig
 cd-hit
 biopython==1.76
 pysam
-ensembl-vep
+ensembl-vep==101.0
+trim-galore
+ucsc-liftover

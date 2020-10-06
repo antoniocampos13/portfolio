@@ -31,7 +31,7 @@ conda config --add channels bioconda
 conda config --add channels conda-forge
 
 # Create an environment for Bioinformatics programs
-conda create -y --name bioenv python=3.8
+conda create -y --name bioenv python=3.6
 
 # Activating an environment
 conda activate bioenv
