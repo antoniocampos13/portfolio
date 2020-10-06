@@ -4,7 +4,7 @@ Variant annotation pipeline intended for automated next generation DNA sequencin
 
 This script is a simplified, modified version of the work by Blighe, Beauchamp, and colleagues at Sheffield Diagnostic Genetics Service, Sheffield Children's NHS Foundation Trust, Sheffield, UK, and their efforts to introduce a clinical-grade next generation sequencing (NGS) analysis pipeline fully validated against Sanger di-deoxy sequencing.
 
-The pipeline is built using open source programs mixed with customised scripts. A master and concise log is kept, with date- and time-stamps. Results directory structure is formed based on the filename of mate-pair `FASTQ` files.
+The pipeline is built using open source programs mixed with customised scripts. A master log and a concise log are kept, with date- and time-stamps. Results directory structure is formed and named based on the filename of mate-pair `FASTQ` files.
 
 The unique feature of the analysis pipeline that increases sensitivity to Sanger sequencing is in the variant calling step, where a final aligned BAM is split into 3 'sub-BAMs' of 75%, 50%, and 25% random reads. Variants are then called on all 4 BAMs, after which a consensus VCF is produced.
 
@@ -75,8 +75,8 @@ Activate your conda environment, then run the script using the following paramet
 * Minimum quality for bases at read ends, below which bases will be cut (integer - default: 20)
 * Minimum allowed read length (integer - default: 20)
 * Adaptor for trimming off read ends ('illumina' / 'nextera' / 'small_rna')
-* Minimum read depth for calling a variant (integer - default:)
-* Minimum allowed mapping quality (integer - default: )
+* Minimum read depth for calling a variant (integer - default: 3)
+* Minimum allowed mapping quality (integer - default: 0)
 * Stringency for calling variants ('relaxed' / 'normal') (relaxed uses --pval-threshold 1.0 with BCFtools call)
 * User identification for logging (alphanumeric)
 
