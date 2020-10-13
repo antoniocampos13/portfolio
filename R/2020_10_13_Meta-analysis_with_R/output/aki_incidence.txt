@@ -1,0 +1,21 @@
+Number of studies combined: k = 21
+
+                     proportion           95%-CI
+Fixed effect model       0.2801 [0.2724; 0.2879]
+Random effects model     0.1227 [0.0725; 0.2003]
+Prediction interval             [0.0107; 0.6451]
+
+Quantifying heterogeneity:
+ tau^2 = 1.4231 [0.8378; 3.3344]; tau = 1.1929 [0.9153; 1.8260];
+ I^2 = 97.6% [97.1%; 98.1%]; H = 6.48 [5.83; 7.20]
+
+Test of heterogeneity:
+      Q d.f.  p-value
+ 839.62   20 < 0.0001
+
+Details on meta-analytical method:
+- Inverse variance method
+- Maximum-likelihood estimator for tau^2
+- Q-profile method for confidence interval of tau^2 and tau
+- Hartung-Knapp adjustment for random effects model
+- Logit transformation
