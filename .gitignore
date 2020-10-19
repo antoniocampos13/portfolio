@@ -2,3 +2,4 @@
 .vscode/
 *.fastq.gz
 .Rproj.user
+*.Rhistory
