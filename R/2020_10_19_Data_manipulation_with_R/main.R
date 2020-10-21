@@ -72,3 +72,6 @@ counts <- subset(counts, select = -c(gene_id))
 
 # Check data frame dimensions (shape) ----
 dim(counts)
+
+# Save counts data frame to use later
+save(counts, file = "counts.RData")
