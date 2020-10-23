@@ -15,7 +15,7 @@ sudo apt-get install -y default-jdk ant
 
 # Installing (mini)conda
 ## Download miniconda installer
-curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh > Miniconda3-latest-Linux-x86_64.sh
 
 ## Go to the folder where the installer was downloaded and run the script:
 bash Miniconda3-latest-Linux-x86_64.sh
