@@ -8,11 +8,14 @@ BiocManager::install(c("edgeR", "AnnotationDbi", "annotate", "org.Hs.eg.db", "En
 library(here)
 
 # Shortcut: loading counts data frame from disk
-source(here("data", "counts.RData"))
+load(here("data", "counts_processed.RData"))
+
+# Load the custom `edgeR_setup()` function
+source(here("src", "edgeR_setup.R"))
 
 # Set up the output path string
 out_path <- here("output", "prostate_cancer.xlsx")
 
 # Run the custom function
-## Will load all
+## Will load all packages installed before
 edger_setup("prostate_cancer", counts, replicates = TRUE, filter = TRUE, gene_id = "ENSEMBL", out_path)

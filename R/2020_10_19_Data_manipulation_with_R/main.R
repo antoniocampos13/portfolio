@@ -74,4 +74,4 @@ counts <- subset(counts, select = -c(gene_id))
 dim(counts)
 
 # Save counts data frame to use later
-save(counts, file = "counts.RData")
+save(counts, file = "counts_processed.RData")
