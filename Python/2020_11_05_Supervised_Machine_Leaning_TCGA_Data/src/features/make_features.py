@@ -13,7 +13,7 @@ CORR_THRESHOLD=0.80
 
 # Set up paths
 project_folder = Path().resolve().parent.parent
-CSV_FILE = project_folder / "data" / "interim" / "prostate_cancer_dataset_processed.csv"
+CSV_FILE = project_folder / "data" / "interim" / "prostate_cancer_dataset.csv"
 
 # Load CSV into pandas.DataFrame
 df = pd.read_csv(CSV_FILE)
