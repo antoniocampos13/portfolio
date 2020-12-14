@@ -386,6 +386,16 @@ then
 			> "${1}"_Aligned_Sorted_PCRDuped_FiltMAPQ.bcf
 fi
 
+# Add sample name to BAM header
+picard AddOrReplaceReadGroups \
+      I="${1}"_Aligned_Sorted_PCRDuped_FiltMAPQ.bam \
+      O="${1}"_final.bam \
+      RGID=1 \
+      RGLB=lib1 \
+      RGPL=illumina \
+      RGPU=unit1 \
+      RGSM="${1}"
+
 #Re-header the VCF
 echo -e ""${1}"" \
 	> samples.txt
