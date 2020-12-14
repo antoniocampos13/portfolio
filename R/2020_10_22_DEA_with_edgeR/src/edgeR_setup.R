@@ -20,7 +20,9 @@ library(AnnotationDbi)
 #' @return A spreadsheet with Excel file extension (.xlsx). It contains data on gene symbol and id, log fold-change (lfc), log counts per million transcripts (logcpm), quasi-likelihood F-test statistic (f) and corresponding p-values, both raw (pvalue) and false-discovery rate-adjusted (adjpvalue).
 
 edger_setup <- function(name, counts, replicates = TRUE, filter = TRUE, gene_id = c("NCBI", "ENSEMBL", "SYMBOL"), output_path) {
-  temp <- counts %>% dplyr::select(ends_with("control"), everything())
+
+  temp <- counts %>% dplyr::select(starts_with(name))
+  temp <- temp %>% dplyr::select(ends_with("control"), everything())
 
   group <- factor(ifelse(str_detect(names(temp), "control"), 1, 2))
 
@@ -106,15 +108,31 @@ edger_setup <- function(name, counts, replicates = TRUE, filter = TRUE, gene_id 
   output <- output %>% rename_all(tolower)
 
   if (dim(output)[1] > 0) {
+  
+	if (file.exists(output_path)) {
+	
+	wb <- loadWorkbook(output_path)
+	
+	addWorksheet(wb, sheetName = name, gridLines = TRUE)
+	
+	writeData(wb, sheet = name, x = output)
+	
+	saveWorkbook(wb, output_path, overwrite = TRUE)
+	
+	}
+	
+	else {
     wb <- createWorkbook()
 
     addWorksheet(wb, sheetName = name, gridLines = TRUE)
 
     writeData(wb, sheet = name, x = output)
 
-    saveWorkbook(wb, output_path, overwrite = FALSE)
+    saveWorkbook(wb, output_path, overwrite = TRUE)
 
     # write.xlsx(output, file = output_path, sheetName = name, append = TRUE, row.names = FALSE)
+	
+	}
 
     paste0("DEGs detected. Saving to spreadsheet on ", output_path)
   }
