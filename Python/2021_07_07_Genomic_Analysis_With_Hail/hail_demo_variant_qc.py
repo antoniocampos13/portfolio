@@ -118,4 +118,6 @@ rf_summary_ht = rf_results.group_by(
 # Join with the sample_qc passing matrix table
 variantqc_pass = mt.annotate_rows(**rf_results[mt.locus, mt.alleles])
 
+variantqc_pass = hl.filter_rows(variantqc_pass.rf_prediction == "TP")
+
 variantqc_pass.write("variantqc_pass.mt", overwrite=True)
