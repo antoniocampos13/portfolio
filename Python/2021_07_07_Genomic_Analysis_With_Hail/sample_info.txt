@@ -1,0 +1,5 @@
+s	sex	phenotype	mean_coverage	chimeric_reads	contamination	median_length
+sample1	XX	case	25	0.02	0.00	300
+sample2	XY	case	22	0.01	0.00	250
+sample3	XY	control	30	0.03	0.00	265
+sample4	XX	control	29	0.01	0.00	250

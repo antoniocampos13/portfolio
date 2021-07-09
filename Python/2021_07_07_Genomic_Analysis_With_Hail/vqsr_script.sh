@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 
+# cohort.vcf.gz = VCF exported from the GenomicsDB with GenotypeVCFs
+# Filtering variants with excess variants
 gatk --java-options "-Xmx3g -Xms3g" VariantFiltration \
     -V cohort.vcf.gz \
     --filter-expression "ExcessHet > 54.69" \
     --filter-name ExcessHet \
     -O cohort_excesshet.vcf.gz 
 
+# Making sites-only
 gatk MakeSitesOnlyVcf \
     -I cohort_excesshet.vcf.gz \
     -O cohort_sitesonly.vcf.gz
 
+# Recalibrate indels/mixed loci
 gatk --java-options "-Xmx24g -Xms24g" VariantRecalibrator \
     -V cohort_sitesonly.vcf.gz \
     --trust-all-polymorphic \
@@ -23,6 +27,7 @@ gatk --java-options "-Xmx24g -Xms24g" VariantRecalibrator \
     -O cohort_indels.recal \
     --tranches-file cohort_indels.tranches
 
+# Recalibrate SNP loci
 gatk --java-options "-Xmx24g -Xms24g" VariantRecalibrator \
     -V cohort_sitesonly.vcf.gz \
     --trust-all-polymorphic \
@@ -37,9 +42,10 @@ gatk --java-options "-Xmx24g -Xms24g" VariantRecalibrator \
     -O cohort_snps.recal \
     --tranches-file cohort_snps.tranches
 
+# Apply the filters (add INFO field with VQSLOD and updating the FILTER field)
 gatk --java-options "-Xmx5g -Xms5g" \
     ApplyVQSR \
-    -V test_output.vcf.gz \
+    -V cohort.vcf.gz \
     --recal-file cohort_indels.recal \
     --tranches-file cohort_indels.tranches \
     --truth-sensitivity-filter-level 99.7 \
