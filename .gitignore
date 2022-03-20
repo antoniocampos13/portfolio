@@ -7,3 +7,4 @@
 *.here
 *.gff
 .Rproj.user
+*.RData
