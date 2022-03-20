@@ -1,6 +1,9 @@
 *.json
 .vscode/
 *.fastq.gz
-.Rproj.user
+*.Rproj.user
+*.Rproj
 *.Rhistory
 *.here
+*.gff
+.Rproj.user
