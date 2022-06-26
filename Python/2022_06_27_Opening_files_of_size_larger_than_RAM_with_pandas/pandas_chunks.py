@@ -16,17 +16,17 @@ column_names = [
     "attributes"
 ]
 
-chunks = pd.read_table(TABLE, names=column_names, chunksize=CHUNKSIZE)
+chunks = pd.read_table(TABLE, names=column_names, chunksize=CHUNKSIZE, comment="#")
 
 # # Or:
-# chunks = pd.read_csv(TABLE, names=column_names, chunksize=CHUNKSIZE, sep="\t")
+# chunks = pd.read_csv(TABLE, names=column_names, chunksize=CHUNKSIZE, sep="\t", comment="#")
 
 for chunk in chunks:
     # Step 1
     temp_df = chunk[chunk["type"] == "exon"]
 
     # Step 2
-    temp_df = temp_df.drop(["source", "score", "strand", "phase", "attributes"])
+    temp_df = temp_df.drop(columns=["source", "score", "strand", "phase"])
 
     # Step 3
     temp_df.to_csv(EDITED_TABLE, header=False, mode="a", sep="\t", index=False)
