@@ -1,0 +1,1 @@
+sapply(list.files(here("src", "functions"), full.names = TRUE), source, .GlobalEnv)

@@ -1,0 +1,4 @@
+Sequential execution: 52.57 sec elapsed
+Parallel execution with 2 workers: 35.78 sec elapsed
+Parallel execution with 4 workers: 28.98 sec elapsed
+Parallel execution with 6 workers: 26.89 sec elapsed
