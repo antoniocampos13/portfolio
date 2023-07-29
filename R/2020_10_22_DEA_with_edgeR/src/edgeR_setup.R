@@ -20,36 +20,33 @@ library(AnnotationDbi)
 #' @return A spreadsheet with Excel file extension (.xlsx). It contains data on gene symbol and id, log fold-change (lfc), log counts per million transcripts (logcpm), quasi-likelihood F-test statistic (f) and corresponding p-values, both raw (pvalue) and false-discovery rate-adjusted (adjpvalue).
 
 edger_setup <- function(name, counts, replicates = TRUE, filter = TRUE, gene_id = c("NCBI", "ENSEMBL", "SYMBOL"), output_path) {
-
-  temp <- counts %>% dplyr::select(starts_with(name))
-  temp <- temp %>% dplyr::select(ends_with("control"), everything())
-
-  group <- factor(ifelse(str_detect(names(temp), "control"), 1, 2))
-
-  edger_list <- DGEList(counts = temp, group = group)
-
+  
+  group <- factor(ifelse(str_detect(names(counts), "control"), 1, 2))
+  
+  edger_list <- DGEList(counts = counts, group = group)
+  
   if (filter) {
     keep <- filterByExpr(edger_list)
-
+    
     edger_list <- edger_list[keep, , keep.lib.sizes = FALSE]
   }
-
+  
   edger_list <- calcNormFactors(edger_list)
-
+  
   design <- model.matrix(~group)
-
+  
   if (replicates) {
     edger_list <- estimateDisp(edger_list, design)
-
+    
     fit <- glmQLFit(edger_list, design)
-
+    
     qlf <- glmQLFTest(fit, coef = 2)
-
-
+    
+    
     if (gene_id == "NCBI") {
       gene_names <- as.vector(getSYMBOL(rownames(qlf$table), "org.Hs.eg"))
     }
-
+    
     else if (gene_id == "ENSEMBL") {
       
       keys <- gsub("\\..*","",rownames(qlf$table))
@@ -57,86 +54,92 @@ edger_setup <- function(name, counts, replicates = TRUE, filter = TRUE, gene_id 
       gene_names <- ensembldb::select(EnsDb.Hsapiens.v79, keys = keys, keytype = "GENEID", columns = c("SYMBOL", "GENEID"))
       
     }
-
+    
     else {
       gene_names <- rownames(qlf$table)
     }
-
-    output <- cbind(gene_names, qlf$table)
+    
+    output <- qlf$table %>%
+      rownames_to_column(var = "gene_id") %>%
+      relocate(gene_id)
+    
     output$adjpvalue <- p.adjust(output$PValue, method = "fdr")
   }
-
+  
   else {
     source(here("src", "hk_genes.R"))
-
+    
     edger_list1 <- edger_list
-
+    
     edger_list1$samples$group <- 1
-
+    
     index <- row.names(edger_list1)
-
+    
     edger_list0 <- estimateDisp(edger_list1[(index %in% housekeeping), ],
-      trend = "none",
-      tagwise = FALSE
+                                trend = "none",
+                                tagwise = FALSE
     )
-
+    
     edger_list$common.dispersion <- edger_list0$common.dispersion
-
+    
     fit <- glmFit(edger_list, design)
-
+    
     lrt <- glmLRT(fit)
-
+    
     if (gene_id == "NCBI") {
       gene_names <- as.vector(getSYMBOL(rownames(lrt$table), "org.Hs.eg"))
     }
-
+    
     else if (gene_id == "ENSEMBL") {
       
       keys <- gsub("\\..*","",rownames(qlf$table))
       
       gene_names <- ensembldb::select(EnsDb.Hsapiens.v79, keys = keys, keytype = "GENEID", columns = c("SYMBOL", "GENEID"))
+      
+      
     }
-
+    
     else {
       gene_names <- rownames(lrt$table)
     }
-
-    output <- cbind(gene_names, lrt$table)
+    
+    output <- qlf$table %>%
+      rownames_to_column(var = "gene_id") %>%
+      relocate(gene_id)
+    
     output$adjpvalue <- p.adjust(output$PValue, method = "fdr")
   }
-
-  output <- output %>% rename_all(tolower)
-
-  if (dim(output)[1] > 0) {
   
-	if (file.exists(output_path)) {
-	
-	wb <- loadWorkbook(output_path)
-	
-	addWorksheet(wb, sheetName = name, gridLines = TRUE)
-	
-	writeData(wb, sheet = name, x = output)
-	
-	saveWorkbook(wb, output_path, overwrite = TRUE)
-	
-	}
-	
-	else {
-    wb <- createWorkbook()
-
-    addWorksheet(wb, sheetName = name, gridLines = TRUE)
-
-    writeData(wb, sheet = name, x = output)
-
-    saveWorkbook(wb, output_path, overwrite = TRUE)
-
-    # write.xlsx(output, file = output_path, sheetName = name, append = TRUE, row.names = FALSE)
-	
-	}
-
+  output <- output %>% rename_all(tolower)
+  
+  if (dim(output)[1] > 0) {
+    
+    if (file.exists(output_path)) {
+      
+      wb <- loadWorkbook(output_path)
+      
+      addWorksheet(wb, sheetName = name, gridLines = TRUE)
+      
+      writeData(wb, sheet = name, x = output)
+      
+      saveWorkbook(wb, output_path, overwrite = TRUE)
+      
+    }
+    
+    else {
+      wb <- createWorkbook()
+      
+      addWorksheet(wb, sheetName = name, gridLines = TRUE)
+      
+      writeData(wb, sheet = name, x = output)
+      
+      saveWorkbook(wb, output_path, overwrite = TRUE)
+      
+    }
+    
     paste0("DEGs detected. Saving to spreadsheet on ", output_path)
   }
-
+  
   else {
     paste0("No DEGs detected.")
   }
