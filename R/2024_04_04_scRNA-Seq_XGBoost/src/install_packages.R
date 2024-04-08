@@ -4,6 +4,7 @@ packages <-
     "tidyverse",
     "glue",
     "reticulate",
+    "R.utils",
     "Seurat"
   )
 
