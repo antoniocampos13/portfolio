@@ -127,9 +127,6 @@ feature_importance_df.to_csv(
 plot_importance(xgb_model, max_num_features=15)
 plt.savefig(str(XGBOOST_DIR / "top15_feature_importance_weight.png"))
 
-# %% Save model as text file
-xgb_model.save_model(str(XGBOOST_DIR / "xgb_model.txt"))
-
 # %% Use shap to help interpretation of the model
 explainer = shap.Explainer(xgb_model)
 shap_values = explainer(train_count_matrix)
@@ -138,3 +135,6 @@ shap_values = explainer(train_count_matrix)
 shap.plots.beeswarm(shap_values, show=False)
 plt.tight_layout()
 plt.savefig(str(XGBOOST_DIR / "beeswarm_plot.png"))
+
+# %% Save model as text file
+xgb_model.save_model(str(XGBOOST_DIR / "xgb_model.txt"))

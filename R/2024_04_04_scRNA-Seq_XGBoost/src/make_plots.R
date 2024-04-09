@@ -8,7 +8,6 @@ ptx_resistant_cells <- train_metadata %>%
   pull(umi)
 
 # Set cells identities ----
-train_cells <- Cells(train_counts_transformed)
 Idents(object = train_counts_transformed, cells = parental_cells) <- "Parental"
 Idents(object = train_counts_transformed, cells = ptx_resistant_cells) <- "Paclitaxel-resistant"
 
