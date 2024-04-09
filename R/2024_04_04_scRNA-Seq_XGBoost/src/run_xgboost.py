@@ -4,6 +4,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import shap
 from hyperopt import STATUS_OK, fmin, hp, tpe
 from hyperopt.pyll import scope
 from sklearn.metrics import roc_auc_score
@@ -126,7 +127,14 @@ feature_importance_df.to_csv(
 plot_importance(xgb_model, max_num_features=15)
 plt.savefig(str(XGBOOST_DIR / "top15_feature_importance_weight.png"))
 
-# %% Save model as JSON file
-xgb_model.save_model(str(XGBOOST_DIR / "xgb_model.json"))
+# %% Save model as text file
+xgb_model.save_model(str(XGBOOST_DIR / "xgb_model.txt"))
 
-# %%
+# %% Use shap to help interpretation of the model
+explainer = shap.Explainer(xgb_model)
+shap_values = explainer(train_count_matrix)
+
+# %% Beeswarm plot
+shap.plots.beeswarm(shap_values, show=False)
+plt.tight_layout()
+plt.savefig(str(XGBOOST_DIR / "beeswarm_plot.png"))
