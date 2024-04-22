@@ -87,6 +87,18 @@ model_train_eval(
     output_path="output"
 )
 
+# %% Check evaluation using complementary probabilities
+model_train_eval(
+    model=model,
+    n_epochs=250,
+    train_dataloader=train_dataloader,
+    test_dataloader=test_dataloader,
+    loss_function=loss_function,
+    optimizer=optimizer,
+    output_path="output",
+    complementary_prob=True
+)
+
 # %% Load best weights (and biases) after iterations
 model = model
 model.load_state_dict(torch.load("output/best_weights.pth"))
@@ -100,20 +112,8 @@ predictions_list = []
 y_preds = torch.squeeze(out)
 predictions_list.append(y_preds.tolist())
 
-## Use Complementary probabilities
+## Use Complementary probabilities (this step is specific for this demonstration only. Do not perform on your data, unless you know what you are doing)
 predictions_flat = [1 - el for el in list(chain.from_iterable(predictions_list))]
 
 # %% Calculate ROC AUC score
 eval_roc_score = roc_auc_score(y_true=test_metadata["label"], y_score=predictions_flat)
-
-# %% Check evaluation using complementary probabilities
-model_train_eval(
-    model=model,
-    n_epochs=250,
-    train_dataloader=train_dataloader,
-    test_dataloader=test_dataloader,
-    loss_function=loss_function,
-    optimizer=optimizer,
-    output_path="output",
-    complementary_prob=True
-)

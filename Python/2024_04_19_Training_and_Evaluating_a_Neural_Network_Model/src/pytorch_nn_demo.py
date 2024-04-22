@@ -44,11 +44,10 @@ class NeuralNetwork(nn.Module):
         self.n_neurons = n_neurons
         self.n_output = n_output
         self.activation_function = activation_function
-        self.sigmoid = nn.Sigmoid()
-
         self.layer1 = nn.Linear(n_features, n_neurons)
         self.layer2 = nn.Linear(n_neurons, n_neurons)
         self.layer3 = nn.Linear(n_neurons, n_output)
+        self.sigmoid = nn.Sigmoid()
         self.double()
 
     def forward(self, input: torch.FloatTensor) -> torch.FloatTensor:
